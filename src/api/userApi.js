@@ -14,9 +14,9 @@ export const userRegistration = (frmData) => {
       const res = await axios.post(userProfileUrl, frmData);
 
       resolve(res.data);
-
-      if (res.data.status === "success") {
-        resolve(res.data);
+      if(res.data.status_code === 403) {//not verified user
+        sessionStorage.setItem("id", res.data.data.id);
+        return ({ status: "notverified", message: 'User not Verified' });
       }
     } catch (error) {
       reject(error);
@@ -31,6 +31,7 @@ export const userRegistrationVerification = (frmData) => {
       resolve(res.data);
       if (res.data.status === "success") {
         resolve(res.data);
+        
       }
     } catch (error) {
       reject({ status: "error", message: error.error });

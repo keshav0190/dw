@@ -64,8 +64,6 @@ export const VerifyForm = ({ formSwitcher }) => {
 				return dispatch(loginFail(isAuth.message));
 			}
 			else{
-				//dispatch(loginSuccess());
-				//dispatch(getUserProfile());
 				history.push("/");
 			}
 			

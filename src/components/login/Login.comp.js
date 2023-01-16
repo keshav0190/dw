@@ -64,7 +64,7 @@ export const LoginForm = ({ formSwitcher }) => {
 				return dispatch(loginFail(isAuth.message));
 			}
 			else if(isAuth.status === "notverified"){
-				history.push("/dashboard");
+				history.push("/verification");
 			}
 			else{
 				dispatch(loginSuccess());

@@ -63,13 +63,10 @@ export const VerifyForm = ({ formSwitcher }) => {
 				console.log(isAuth);
 				return dispatch(loginFail(isAuth.message));
 			}
-			else if(isAuth.status === "notverified"){
-				history.push("/dashboard");
-			}
 			else{
-				dispatch(loginSuccess());
-				dispatch(getUserProfile());
-				history.push("/dashboard");
+				//dispatch(loginSuccess());
+				//dispatch(getUserProfile());
+				history.push("/");
 			}
 			
 		} catch (error) {

@@ -71,22 +71,10 @@ export const verifyOTP = async (frmData) => {
     const res = await axios.post(userVerificationUrl, frmData);
     console.log(res.data);
     if (res.data.status_code === 200) {
-      sessionStorage.setItem("accessJWT", res.data.token);
-      sessionStorage.setItem("id", res.data.data.id);
-      localStorage.setItem(
-        "crmSite",
-        JSON.stringify({ refreshJWT: res.data.token })
-      );
-      return ({ status: "success", message: 'Logged in' });
-    }
-    else if(res.data.status_code === 403) {//not verified user
-      return ({ status: "notverified", message: 'User not Verified' });
+      return ({ status: "success", message: 'Verified' });
     }
     else if(res.data.status_code === 401) {//incorrect password
-      return({ status: "error", message: 'Incorrect password' });
-    }
-    else if(res.data.status_code === 404) {//other error
-      return({ status: "error", message: 'User not found' });
+      return({ status: "error", message: 'Incorrect OTP' });
     }
   } catch (error) {
     console.log('in error');

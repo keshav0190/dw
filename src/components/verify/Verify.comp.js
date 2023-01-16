@@ -12,11 +12,11 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 
-import { loginPending, loginSuccess, loginFail } from "./loginSlice";
-import { userLogin } from "../../api/userApi";
+import { loginPending, loginSuccess, loginFail } from "../login/loginSlice";
+import { verifyOTP } from "../../api/userApi";
 import { getUserProfile } from "../../pages/dashboard/userAction";
 
-export const LoginForm = ({ formSwitcher }) => {
+export const VerifyForm = ({ formSwitcher }) => {
 	const dispatch = useDispatch();
 	const history = useHistory();
 	let location = useLocation();
@@ -24,23 +24,23 @@ export const LoginForm = ({ formSwitcher }) => {
 	const { isLoading, isAuth, error } = useSelector(state => state.login);
 	let { from } = location.state || { from: { pathname: "/" } };
 
-	useEffect(() => {
+	/* useEffect(() => {
 		sessionStorage.getItem("accessJWT") && history.replace(from);
-	}, [history, isAuth]);
+	}, [history, isAuth]); */
 
-	const [email, setEmail] = useState("");
-	const [password, setPassword] = useState("");
+	const [eotp, setEotp] = useState("");
+	const [potp, setPotp] = useState("");
 
 	const handleOnChange = e => {
 		const { name, value } = e.target;
 
 		switch (name) {
-			case "email":
-				setEmail(value);
+			case "eotp":
+				setEotp(value);
 				break;
 
-			case "password":
-				setPassword(value);
+			case "potp":
+				setPotp(value);
 				break;
 
 			default:
@@ -50,17 +50,17 @@ export const LoginForm = ({ formSwitcher }) => {
 
 	const handleOnSubmit = async e => {
 		e.preventDefault();
-
-		if (!email || !password) {
+        let id = sessionStorage.getItem("id");
+		if (!eotp || !potp) {
 			return alert("Fill up all the form!");
 		}
 
 		dispatch(loginPending());
-
 		try {
-			const isAuth = await userLogin({ email, password });
+			const isAuth = await verifyOTP({ id, eotp, potp });
 
 			if (isAuth.status === "error") {
+				console.log(isAuth);
 				return dispatch(loginFail(isAuth.message));
 			}
 			else if(isAuth.status === "notverified"){
@@ -82,43 +82,37 @@ export const LoginForm = ({ formSwitcher }) => {
 		<Container>
 			<Row>
 				<Col>
-					<h1 className="text-info text-center">Client Login</h1>
+					<h1 className="text-info text-center">User Verification</h1>
 					<hr />
 					{error && <Alert variant="danger">{error}</Alert>}
 					<Form autoComplete="off" onSubmit={handleOnSubmit}>
 						<Form.Group>
-							<Form.Label>Email Address</Form.Label>
+							<Form.Label>Email OTP</Form.Label>
 							<Form.Control
-								type="email"
-								name="email"
-								value={email}
+								type="text"
+								name="eotp"
+								value={eotp}
 								onChange={handleOnChange}
-								placeholder="Enter Email"
+								placeholder="Enter OTP"
 								required
 							/>
 						</Form.Group>
 						<Form.Group>
-							<Form.Label>Password</Form.Label>
+							<Form.Label>Phone OTP</Form.Label>
 							<Form.Control
-								type="password"
-								name="password"
+								type="text"
+								name="potp"
 								onChange={handleOnChange}
-								value={password}
-								placeholder="password"
+								value={potp}
+								placeholder="Enter OTP"
 								required
 							/>
 						</Form.Group>
 
-						<Button type="submit">Login</Button>
+						<Button type="submit">Verify</Button>
 						{isLoading && <Spinner variant="primary" animation="border" />}
 					</Form>
 					<hr />
-				</Col>
-			</Row>
-
-			<Row>
-				<Col>
-					<a href="/password-reset">Forget Password?</a>
 				</Col>
 			</Row>
 			<Row className="py-4">
@@ -130,6 +124,4 @@ export const LoginForm = ({ formSwitcher }) => {
 	);
 };
 
-LoginForm.propTypes = {
-	formSwitcher: PropTypes.func.isRequired,
-};
+export default VerifyForm;

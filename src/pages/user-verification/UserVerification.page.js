@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Jumbotron, Spinner, Alert } from "react-bootstrap";
 import { useParams } from "react-router-dom";
+import VerifyForm from "../../components/verify/Verify.comp";
 
 import { userRegistrationVerification } from "../../api/userApi";
 
@@ -31,15 +32,7 @@ export const UserVerification = () => {
     <div className="registration-page bg-info">
       <div className="mt-5">
         <Jumbotron className="form-box">
-          {!response.status && <Spinner variant="info" animation="border" />}
-
-          {response.status && (
-            <Alert
-              variant={response.status === "success" ? "success" : "danger"}
-            >
-              {response.message}
-            </Alert>
-          )}
+          <VerifyForm/>
         </Jumbotron>
       </div>
     </div>

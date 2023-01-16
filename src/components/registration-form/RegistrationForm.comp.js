@@ -12,13 +12,12 @@ import { newUserRegistration } from "./userRegAction";
 import { useDispatch, useSelector } from "react-redux";
 
 const initialState = {
-  name: "Prem Acharya",
-  phone: "0410000000",
-  email: "fakeemail@email.com",
-  company: "Dented Code",
-  address: "George st Sydney",
-  password: "sfsd#3Dsg",
-  confirmPass: "sfsd#3Dsg",
+  firstName: "",
+  lastName: "",
+  phoneNo: "",
+  email: "",
+  password: "",
+  confirmPass: "",
 };
 const passVerificationError = {
   isLenthy: false,
@@ -73,14 +72,13 @@ const RegistrationForm = () => {
   const handleOnSubmit = (e) => {
     e.preventDefault();
     // console.log(newUser);
-    const { name, phone, email, company, address, password } = newUser;
+    const { firstName, lastName, phoneNo, email, password } = newUser;
 
     const newRegistration = {
-      name,
-      phone,
+      firstName,
+      lastName,
+      phoneNo,
       email,
-      company,
-      address,
       password,
     };
     dispatch(newUserRegistration(newRegistration));
@@ -108,13 +106,25 @@ const RegistrationForm = () => {
         <Col>
           <Form onSubmit={handleOnSubmit}>
             <Form.Group>
-              <Form.Label>Full Name</Form.Label>
+              <Form.Label>First Name</Form.Label>
               <Form.Control
                 type="text"
-                name="name"
-                value={newUser.name}
+                name="firstName"
+                value={newUser.firstName}
                 onChange={handleOnChange}
-                placeholder="Your name"
+                placeholder="Your first name"
+                required
+              />
+            </Form.Group>
+
+            <Form.Group>
+              <Form.Label>Last Name</Form.Label>
+              <Form.Control
+                type="text"
+                name="lastName"
+                value={newUser.lastName}
+                onChange={handleOnChange}
+                placeholder="Your last name"
                 required
               />
             </Form.Group>
@@ -123,8 +133,8 @@ const RegistrationForm = () => {
               <Form.Label>Phone</Form.Label>
               <Form.Control
                 type="number"
-                name="phone"
-                value={newUser.phone}
+                name="phoneNo"
+                value={newUser.phoneNo}
                 onChange={handleOnChange}
                 placeholder="Phone"
                 required
@@ -139,30 +149,6 @@ const RegistrationForm = () => {
                 value={newUser.email}
                 onChange={handleOnChange}
                 placeholder="Enter email"
-                required
-              />
-            </Form.Group>
-
-            <Form.Group>
-              <Form.Label>Company name</Form.Label>
-              <Form.Control
-                type="text"
-                name="company"
-                value={newUser.company}
-                onChange={handleOnChange}
-                placeholder="Company name"
-                required
-              />
-            </Form.Group>
-
-            <Form.Group>
-              <Form.Label>Address</Form.Label>
-              <Form.Control
-                type="text"
-                name="address"
-                value={newUser.address}
-                onChange={handleOnChange}
-                placeholder="Full address"
                 required
               />
             </Form.Group>

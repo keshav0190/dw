@@ -27,7 +27,7 @@ function App() {
 					<Route exact path="/password-reset">
 						<PasswordOtpForm />
 					</Route>
-					<Route exact path="/verification/:_id/:email">
+					<Route exact path="/verification">
 						<UserVerification />
 					</Route>
 

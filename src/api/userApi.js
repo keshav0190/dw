@@ -1,8 +1,9 @@
 import axios from "axios";
 
-const rootUrl = "http://localhost:3001/v1/";
-const loginUrl = rootUrl + "user/login";
+const rootUrl = "http://localhost:8080/";
+const loginUrl = rootUrl + "login";
 const userProfileUrl = rootUrl + "user";
+const userProfileUrlHome = rootUrl + "user/home";
 const logoutUrl = rootUrl + "user/logout";
 const newAccessJWT = rootUrl + "tokens";
 const userVerificationUrl = userProfileUrl + "/verify";
@@ -37,36 +38,73 @@ export const userRegistrationVerification = (frmData) => {
   });
 };
 
-export const userLogin = (frmData) => {
-  return new Promise(async (resolve, reject) => {
+export const userLogin = async (frmData) => {
     try {
       const res = await axios.post(loginUrl, frmData);
-
-      resolve(res.data);
-
-      if (res.data.status === "success") {
-        sessionStorage.setItem("accessJWT", res.data.accessJWT);
+      console.log(res.data);
+      if (res.data.status_code === 200) {
+        sessionStorage.setItem("accessJWT", res.data.token);
+        sessionStorage.setItem("id", res.data.data.id);
         localStorage.setItem(
           "crmSite",
-          JSON.stringify({ refreshJWT: res.data.refreshJWT })
+          JSON.stringify({ refreshJWT: res.data.token })
         );
+        return ({ status: "success", message: 'Logged in' });
+      }
+      else if(res.data.status_code === 403) {//not verified user
+        return ({ status: "notverified", message: 'User not Verified' });
+      }
+      else if(res.data.status_code === 401) {//incorrect password
+        return({ status: "error", message: 'Incorrect password' });
+      }
+      else if(res.data.status_code === 404) {//other error
+        return({ status: "error", message: 'User not found' });
       }
     } catch (error) {
-      reject(error);
+      console.log('in error');
+      return({ status: "error", message: error.message });
     }
-  });
+};
+
+export const verifyOTP = async (frmData) => {
+  try {
+    const res = await axios.post(userVerificationUrl, frmData);
+    console.log(res.data);
+    if (res.data.status_code === 200) {
+      sessionStorage.setItem("accessJWT", res.data.token);
+      sessionStorage.setItem("id", res.data.data.id);
+      localStorage.setItem(
+        "crmSite",
+        JSON.stringify({ refreshJWT: res.data.token })
+      );
+      return ({ status: "success", message: 'Logged in' });
+    }
+    else if(res.data.status_code === 403) {//not verified user
+      return ({ status: "notverified", message: 'User not Verified' });
+    }
+    else if(res.data.status_code === 401) {//incorrect password
+      return({ status: "error", message: 'Incorrect password' });
+    }
+    else if(res.data.status_code === 404) {//other error
+      return({ status: "error", message: 'User not found' });
+    }
+  } catch (error) {
+    console.log('in error');
+    return({ status: "error", message: error.message });
+  }
 };
 
 export const fetchUser = () => {
   return new Promise(async (resolve, reject) => {
     try {
       const accessJWT = sessionStorage.getItem("accessJWT");
+      const id = sessionStorage.getItem("id");
 
       if (!accessJWT) {
         reject("Token not found!");
       }
 
-      const res = await axios.get(userProfileUrl, {
+      const res = await axios.get(userProfileUrlHome+'/'+id, {
         headers: {
           Authorization: accessJWT,
         },

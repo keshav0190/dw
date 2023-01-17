@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const rootUrl = "http://18.179.43.223:8080/";
+const rootUrl = "http://localhost:8080/";
 const loginUrl = rootUrl + "login";
 const userProfileUrl = rootUrl + "user";
 const userProfileUrlHome = rootUrl + "user/home";
@@ -14,10 +14,8 @@ export const userRegistration = (frmData) => {
       const res = await axios.post(userProfileUrl, frmData);
 
       resolve(res.data);
-      if(res.data.status_code === 403) {//not verified user
-        sessionStorage.setItem("id", res.data.data.id);
-        return ({ status: "notverified", message: 'User not Verified' });
-      }
+      //console.log(res.data.data.id);
+      
     } catch (error) {
       reject(error);
     }

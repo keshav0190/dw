@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const rootUrl = "http://localhost:8080/";
+const rootUrl = "http://18.179.43.223:8080/";
 const loginUrl = rootUrl + "login";
 const userProfileUrl = rootUrl + "user";
 const userProfileUrlHome = rootUrl + "user/home";
